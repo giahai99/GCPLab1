@@ -16,15 +16,15 @@
 
     </properties>
 
-    <build>
-    <plugins>
-        <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>1.2</version>
-        </plugin>
-    </plugins>
-    </build>
+<!--    <build>-->
+<!--    <plugins>-->
+<!--        <plugin>-->
+<!--            <groupId>org.codehaus.mojo</groupId>-->
+<!--            <artifactId>exec-maven-plugin</artifactId>-->
+<!--            <version>1.2</version>-->
+<!--        </plugin>-->
+<!--    </plugins>-->
+<!--    </build>-->
 
     <dependencies>
         <dependency>

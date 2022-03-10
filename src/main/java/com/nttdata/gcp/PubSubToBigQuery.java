@@ -1,11 +1,13 @@
 package com.nttdata.gcp;
 
 import com.google.api.services.bigquery.model.TableFieldSchema;
+import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.PipelineResult;
+import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubIO;
 import org.apache.beam.sdk.options.*;
 import org.apache.beam.sdk.schemas.JavaFieldSchema;
@@ -180,7 +182,7 @@ public class PubSubToBigQuery {
             fields.add(new TableFieldSchema().setName("id").setType("INTEGER"));
             fields.add(new TableFieldSchema().setName("name").setType("STRING"));
             fields.add(new TableFieldSchema().setName("surname").setType("STRING"));
-            TableSchema shema = new TableSchema().setFields(fields);
+            TableSchema schema = new TableSchema().setFields(fields);
 
             PCollection<String> messages = null;
             if(options.getUseSubscription()){
@@ -197,15 +199,28 @@ public class PubSubToBigQuery {
             PCollectionTuple transformOut =
                     messages.apply("ConvertMessageToAccount", new PubsubMessageToAccount());
 
-
+            // Write parsed messages to BigQuery
+            transformOut.get(parsedMessages).apply("ToBQRow",ParDo.of(new DoFn<Account, TableRow>()
+            {
+                @ProcessElement
+                public void processElement(ProcessContext c) throws Exception {
+                    TableRow row = new TableRow();
+                    Account info = c.element();
+                    row.set("id",info.getId());
+                    row.set("name",info.getName());
+                    row.set("surname",info.getSurname());
+                    c.output(row);
+                }
+            })).apply(BigQueryIO.writeTableRows().to(options.getOutputTable())
+                    .withSchema(schema)
+                    .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND)
+                    .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED));
+            // Write malformed data to dlq topic
+            transformOut.get(unparsedMessages).apply("Write to PubSub",
+                    PubsubIO.writeStrings().to(options.getOutputTopic()));
+        } catch (Exception e){
+            log.error(e.getMessage());
         }
-
-
+        return pipeline.run();
     }
-
-
-
-
-
-
 }
