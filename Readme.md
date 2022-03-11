@@ -39,5 +39,18 @@ export REGION=europe-west4
 
 mvn compile exec:java \
 -D exec.mainClass=${MAIN_CLASS_NAME} \
-
+-D exec.args=" \
+--inputTopic=${PUBSUB_TOPIC_INPUT} \
+--outputTopic=${PUBSUB_TOPIC_OUTPUT} \
+--outputTable=${OUTPUT_BIGQUERY_TABLE} \
+--project=${PROJECT_ID} \
+--region=${REGION} \
+--runner=DataflowRunner \
+--jobName=usecase1-labid-$LAB_ID \
+--serviceAccount=c4e-uc1-sa-$LAB_ID@nttdata-c4e-bde.iam.gserviceaccount.com \
+--maxNumWorkers=1 \
+--workerMachineType=n1-standard-1 \
+--gcpTempLocation=gs://c4e-uc1-dataflow-temp-$LAB_ID/temp \
+--stagingLocation=gs://c4e-uc1-dataflow-temp-$LAB_ID/staging \
+--subnetwork=regions/europe-west4/subnetworks/subnet-uc1-$LAB_ID --streaming"
 ```
