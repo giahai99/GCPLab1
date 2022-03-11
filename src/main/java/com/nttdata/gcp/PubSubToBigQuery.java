@@ -60,7 +60,7 @@ public class PubSubToBigQuery {
         @Default.Boolean(false)
         Boolean getUseSubscription();
 
-        void setUseSubscription(String value);
+        void setUseSubscription(Boolean value);
 
         @Description("The Cloud Pub/Sub subscriptio to consume from "
                 + "The name should be in the format of "
