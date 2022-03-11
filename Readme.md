@@ -14,10 +14,6 @@ Step 1: Install python environment and dependencies
 pip3 install faker
 pip3 install google-cloud-pubsub
 ```
-Step 2: Run file publish
-```
-python3 publish_data.py
-```
 
 ###4. Submit job and run dataflow
 Step1: Resolve dependencies
@@ -35,22 +31,23 @@ export MAIN_CLASS_NAME=com.nttdata.gcp.PubSubToBigQuery
 export PUBSUB_TOPIC_INPUT=projects/${PROJECT_ID}/topics/uc1-input-topic-$LAB_ID
 export PUBSUB_TOPIC_OUTPUT=projects/${PROJECT_ID}/topics/uc1-dlq-topic-$LAB_ID
 export OUTPUT_BIGQUERY_TABLE=${PROJECT_ID}:uc1_$LAB_ID.account
-export REGION=europe-west4
+export REGION=asia-east1
 
-mvn compile exec:java \
--D exec.mainClass=${MAIN_CLASS_NAME} \
--D exec.args=" \
---inputTopic=${PUBSUB_TOPIC_INPUT} \
---outputTopic=${PUBSUB_TOPIC_OUTPUT} \
---outputTable=${OUTPUT_BIGQUERY_TABLE} \
---project=${PROJECT_ID} \
---region=${REGION} \
---runner=DataflowRunner \
---jobName=usecase1-labid-$LAB_ID \
---serviceAccount=Haidepzai_kut3@yahoo.com \
---maxNumWorkers=1 \
---workerMachineType=n1-standard-1 \
---gcpTempLocation=gs://c4e-uc1-dataflow-temp-$LAB_ID/temp \
---stagingLocation=gs://c4e-uc1-dataflow-temp-$LAB_ID/staging \
---subnetwork=regions/europe-west4/subnetworks/subnet-uc1-$LAB_ID --streaming"
+mvn compile exec:java -D"exec.mainClass=${MAIN_CLASS_NAME}" -D exec.args=" --inputTopic=${PUBSUB_TOPIC_INPUT} --\
+outputTopic=${PUBSUB_TOPIC_OUTPUT} --\
+outputTable=${OUTPUT_BIGQUERY_TABLE} --\
+project=${PROJECT_ID} --\
+region=${REGION} --\
+runner=DataflowRunner --\
+jobName=usecase1-labid-$LAB_ID --\
+serviceAccount=1055862801244-compute@developer.gserviceaccount.com --\
+maxNumWorkers=1 --\
+workerMachineType=n1-standard-1 --\
+gcpTempLocation=gs://c4e-uc1-dataflow-temp-$LAB_ID/temp --\
+stagingLocation=gs://c4e-uc1-dataflow-temp-$LAB_ID/staging --\
+subnetwork=regions/asia-east1/subnetworks/subnet-uc1-$LAB_ID --streaming"
+```
+Step 3: Run file publish
+```
+python3 publish_data.py
 ```
