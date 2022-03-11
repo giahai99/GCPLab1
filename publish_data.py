@@ -5,7 +5,7 @@ import time
 import sys
 from faker import Faker
 from google.cloud import pubsub_v1
-project_id = "nttdata-c4e-bde"
+project_id = "my-project-demo-338104"
 
 # all pub/sub topic are create on clean/ subscriber
 # just have topic to publisher here
@@ -13,7 +13,7 @@ publisher = pubsub_v1.PublisherClient()
 if len(sys.argv) >= 2 and sys.argv[1] != '':
     input_topic = sys.argv[1]
 else:
-    input_topic = "projects/nttdata-c4e-bde/topics/uc1-input-topic-2"
+    input_topic = "projects/my-project-demo-338104/topics/uc1-input-topic-40"
 print(input_topic)
 
 fake = Faker()

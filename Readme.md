@@ -29,12 +29,12 @@ mvn clean dependency:resolve
 Step 2: Run dataflow pipeline
 ```
 cd $BASE_DIR
-export LAB_ID=2
+export LAB_ID=40
 export PROJECT_ID=$(gcloud config get-value project)
 export MAIN_CLASS_NAME=com.nttdata.gcp.PubSubToBigQuery
 export PUBSUB_TOPIC_INPUT=projects/${PROJECT_ID}/topics/uc1-input-topic-$LAB_ID
 export PUBSUB_TOPIC_OUTPUT=projects/${PROJECT_ID}/topics/uc1-dlq-topic-$LAB_ID
-export OUTPUT_BIGQUERY_TABLE=${PROJECT_ID}:uc1_2.account
+export OUTPUT_BIGQUERY_TABLE=${PROJECT_ID}:uc1_$LAB_ID.account
 export REGION=europe-west4
 
 mvn compile exec:java \
@@ -47,7 +47,7 @@ mvn compile exec:java \
 --region=${REGION} \
 --runner=DataflowRunner \
 --jobName=usecase1-labid-$LAB_ID \
---serviceAccount=c4e-uc1-sa-$LAB_ID@nttdata-c4e-bde.iam.gserviceaccount.com \
+--serviceAccount=Haidepzai_kut3@yahoo.com \
 --maxNumWorkers=1 \
 --workerMachineType=n1-standard-1 \
 --gcpTempLocation=gs://c4e-uc1-dataflow-temp-$LAB_ID/temp \
